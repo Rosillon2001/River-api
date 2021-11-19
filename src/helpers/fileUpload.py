@@ -6,14 +6,14 @@ def saveImage(fieldName: str, directory: str):
         raise Exception('Invalid file field name provided')
 
     # CHECK IF PROFILE IMAGES DIRECTORY EXISTS
-    if not os.path.exists("src/" + directory):
-        os.makedirs("src/" + directory)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
     # OBTAIN IMAGE PROVIDED IN REQUEST AND SAVE IT WITH AN UNIQUE NAME
     image = request.files[fieldName]
     imageName = uuid.uuid4().hex + image.filename
     imageRoute = os.path.join(directory, imageName)
-    image.save("src/" + imageRoute)
+    image.save(imageRoute)
     
     # CONCATENATE SERVER'S BASE URL WITH THE IMAGE ROUTE FOR STORING IT IN THE DATABASE
     imageRoute = os.getenv('BASE_URL') + imageRoute
@@ -22,7 +22,7 @@ def saveImage(fieldName: str, directory: str):
 
 def deleteImage(imageURL: str):
     # CHECK IF PROFILE IMAGE ROUTE EXISTS
-    imageRoute = "src/" + imageURL.split(os.getenv('BASE_URL'))[1]
+    imageRoute = imageURL.split(os.getenv('BASE_URL'))[1]
 
     if not os.path.exists(imageRoute):
         return

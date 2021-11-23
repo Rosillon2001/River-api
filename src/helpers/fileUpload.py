@@ -20,6 +20,29 @@ def saveImage(fieldName: str, directory: str):
 
     return imageRoute
 
+def saveImages(fieldName: str, directory: str):
+    print()
+    if fieldName not in request.files:
+        raise Exception('Invalid file field name provided')
+
+    # CHECK IF PROFILE IMAGES DIRECTORY EXISTS
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    filesURL = []
+    files = request.files.getlist(fieldName)
+    for file in files:
+        if file.filename != '':
+            imageName = uuid.uuid4().hex + file.filename
+            imageRoute = os.path.join(directory, imageName)
+            file.save(imageRoute)
+            imageRoute = os.getenv('BASE_URL') + imageRoute
+            filesURL.append(imageRoute)
+            
+    return filesURL
+
+
+
 def deleteImage(imageURL: str):
     # CHECK IF PROFILE IMAGE ROUTE EXISTS
     imageRoute = imageURL.split(os.getenv('BASE_URL'))[1]
@@ -29,3 +52,4 @@ def deleteImage(imageURL: str):
     else:
         os.remove(imageRoute)
         return
+

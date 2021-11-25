@@ -16,13 +16,13 @@ def getUserPosts(request):
         # GET USER POSTS
         posts = []
         for post in user.posts:
-            postData = {'id': post.id, 'userID': post.user_id, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(post.reposts), 'type': 'post'}
+            postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(post.reposts), 'type': 'post'}
             posts.append(postData)
 
         # GET USER REPOSTS
         reposts = []
         for repost in user.reposts:
-            repostData = {'id': repost.post.id, 'userID': repost.post.user_id, 'likes': repost.post.likes, 'text': repost.post.text, 'images': repost.post.images, 'dateCreated': repost.dateCreated, 'postDateCreated': repost.post.dateCreated, 'repostNumber': len(post.reposts), 'type':'repost'}
+            repostData = {'id': repost.post.id, 'userID': repost.post.user_id, 'username': repost.post.user.username, 'name': repost.post.user.name, 'picture': repost.post.user.picture, 'likes': repost.post.likes, 'text': repost.post.text, 'images': repost.post.images, 'dateCreated': repost.dateCreated, 'postDateCreated': repost.post.dateCreated, 'repostNumber': len(post.reposts), 'type':'repost'}
             reposts.append(repostData)
 
         # COMBINE POSTS AND REPOSTS FOR SORTING BY DATE

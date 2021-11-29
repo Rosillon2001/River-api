@@ -1,5 +1,5 @@
 from flask import request
-import os, uuid
+import os, uuid, cloudinaryAPI
 
 def saveImage(fieldName: str, directory: str):
     if fieldName not in request.files:
@@ -14,6 +14,7 @@ def saveImage(fieldName: str, directory: str):
     imageName = uuid.uuid4().hex + image.filename
     imageRoute = os.path.join(directory, imageName)
     image.save(imageRoute)
+    cloudinaryAPI.upload(imageRoute)
     
     # CONCATENATE SERVER'S BASE URL WITH THE IMAGE ROUTE FOR STORING IT IN THE DATABASE
     imageRoute = os.getenv('BASE_URL') + imageRoute
@@ -36,6 +37,7 @@ def saveImages(fieldName: str, directory: str):
             imageName = uuid.uuid4().hex + file.filename
             imageRoute = os.path.join(directory, imageName)
             file.save(imageRoute)
+            
             imageRoute = os.getenv('BASE_URL') + imageRoute
             filesURL.append(imageRoute)
             

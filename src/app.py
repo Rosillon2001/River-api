@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from database import db
+import cloudinary
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -15,6 +16,9 @@ app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
 CORS(app)
 db.init_app(app)
+#Cloudinary config
+cloudinary.config(cloud_name = os.getenv('CLOUD_NAME'), api_key=os.getenv('CLOUDINARY_KEY'), 
+    api_secret=os.getenv('CLOUDINARY_SECRET'))
 
 app.register_blueprint(user_bp)
 app.register_blueprint(post_bp)

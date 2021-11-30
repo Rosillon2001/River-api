@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from database import db
+from cloudinary import config
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -19,6 +20,10 @@ db.init_app(app)
 app.register_blueprint(user_bp)
 app.register_blueprint(post_bp)
 app.register_blueprint(search_bp)
+
+#Cloudinary config
+config(cloud_name = os.getenv('CLOUD_NAME'), api_key=os.getenv('CLOUDINARY_KEY'), 
+    api_secret=os.getenv('CLOUDINARY_SECRET'))
 
 @app.route("/")
 def index():

@@ -107,7 +107,7 @@ def updateUser(request):
             changeFlag= True
         if('picture' in request.files and request.files['picture'].filename != ""):
             if user.picture:
-                # deleteImage(user.picture)
+                deleteImage(user.picture)
                 user.picture = saveImage('picture', 'static/images/profile/')
             else:
                 user.picture = saveImage('picture', 'static/images/profile/')

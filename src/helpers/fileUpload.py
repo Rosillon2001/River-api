@@ -49,12 +49,6 @@ def saveImages(fieldName: str, directory: str):
 
 
 def deleteImage(imageURL: str):
-    # CHECK IF PROFILE IMAGE ROUTE EXISTS
-    imageRoute = imageURL.split(os.getenv('BASE_URL'))[1]
-
-    if not os.path.exists(imageRoute):
-        return
-    else:
-        os.remove(imageRoute)
-        return
+    deletion = cloudinaryAPI.delete(imageURL)
+    return deletion
 

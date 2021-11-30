@@ -109,6 +109,8 @@ def updateUser(request):
             if user.picture:
                 # deleteImage(user.picture)
                 user.picture = saveImage('picture', 'static/images/profile/')
+            else:
+                user.picture = saveImage('picture', 'static/images/profile/')
             changeFlag = True
 
         if changeFlag:

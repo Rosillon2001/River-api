@@ -19,7 +19,7 @@ def saveImage(fieldName: str, directory: str):
     
     
     # CONCATENATE SERVER'S BASE URL WITH THE IMAGE ROUTE FOR STORING IT IN THE DATABASE
-    imageRoute = cloudinaryURI
+    imageRoute = cloudinaryURI['secure_url']
 
     return imageRoute
 

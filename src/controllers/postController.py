@@ -15,13 +15,15 @@ def getAllPosts():
         # POST LIST
         postList = []
         for post in posts:
-            postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(post.reposts), 'type': 'post'}
+            reposters = [id[0] for id in post.reposts.with_entities(Repost.user_id).all()]
+            postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(reposters), 'reposters': reposters, 'type': 'post'}
             postList.append(postData)
 
         # REPOST LIST
         repostList = []
         for repost in reposts:
-            repostData = {'id': repost.post.id, 'userID': repost.post.user_id, 'username': repost.post.user.username, 'name': repost.post.user.name, 'picture': repost.post.user.picture, 'likes': repost.post.likes, 'text': repost.post.text, 'images': repost.post.images, 'dateCreated': repost.dateCreated, 'postDateCreated': repost.post.dateCreated, 'repostNumber': len(repost.post.reposts), 'type':'repost', 'reposterID': repost.user.id, 'reposterUsername': repost.user.username}
+            reposters = [id[0] for id in repost.post.reposts.with_entities(Repost.user_id).all()]
+            repostData = {'id': repost.post.id, 'userID': repost.post.user_id, 'username': repost.post.user.username, 'name': repost.post.user.name, 'picture': repost.post.user.picture, 'likes': repost.post.likes, 'text': repost.post.text, 'images': repost.post.images, 'dateCreated': repost.dateCreated, 'postDateCreated': repost.post.dateCreated, 'repostNumber': len(reposters), 'type':'repost', 'reposters': reposters, 'reposterID': repost.user.id, 'reposterUsername': repost.user.username}
             repostList.append(repostData)
 
         # COMBINE POSTS AND REPOSTS FOR SORTING BY DATE AND ID
@@ -44,18 +46,21 @@ def getUserPosts(request):
         # GET USER POSTS
         posts = []
         for post in user.posts:
-            postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(post.reposts), 'type': 'post'}
+            reposters = [id[0] for id in post.reposts.with_entities(Repost.user_id).all()]
+            postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(reposters), 'reposters': reposters, 'type': 'post'}
             posts.append(postData)
 
         # GET USER REPOSTS
         reposts = []
         for repost in user.reposts:
-            repostData = {'id': repost.post.id, 'userID': repost.post.user_id, 'username': repost.post.user.username, 'name': repost.post.user.name, 'picture': repost.post.user.picture, 'likes': repost.post.likes, 'text': repost.post.text, 'images': repost.post.images, 'dateCreated': repost.dateCreated, 'postDateCreated': repost.post.dateCreated, 'repostNumber': len(repost.post.reposts), 'type':'repost', 'reposterID': repost.user.id, 'reposterUsername': repost.user.username}
+            reposters = [id[0] for id in repost.post.reposts.with_entities(Repost.user_id).all()]
+            repostData = {'id': repost.post.id, 'userID': repost.post.user_id, 'username': repost.post.user.username, 'name': repost.post.user.name, 'picture': repost.post.user.picture, 'likes': repost.post.likes, 'text': repost.post.text, 'images': repost.post.images, 'dateCreated': repost.dateCreated, 'postDateCreated': repost.post.dateCreated, 'repostNumber': len(reposters), 'reposters': reposters, 'type':'repost', 'reposterID': repost.user.id, 'reposterUsername': repost.user.username}
             reposts.append(repostData)
 
         # COMBINE POSTS AND REPOSTS FOR SORTING BY DATE
         totalPosts = posts + reposts
         totalPosts.sort(key=itemgetter("dateCreated"))
+        totalPosts.reverse()
 
         return {'status': 200, 'totalPosts': totalPosts}, 200
     except Exception as e:

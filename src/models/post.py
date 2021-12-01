@@ -11,6 +11,7 @@ class Post(db.Model):
     images = db.Column(db.ARRAY(db.String(255)), nullable=True)
     dateCreated = db.Column(db.DateTime, default=datetime.utcnow()-timedelta(hours=4))
     reposts = db.relationship('Repost', cascade="all, delete", backref="post")
+    comments = db.relationship('Comment', cascade="all, delete", backref="post")
 
     #CONSTRUCTOR
     def __init__(self, user_id, text, images):

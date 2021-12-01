@@ -142,3 +142,32 @@ def repost(request, id):
     except Exception as e:
         print(e)
         return {'status':500, 'message':'An error occurred'}, 500
+
+@authTokenRequired
+def likePost(request, id):
+    try:
+        token = request.headers['Authorization'].split(" ")[1]
+        userID = decodeToken(token).get('id')
+        user = User.query.get(userID)
+
+        # QUERY POST AND CHECK IF EXISTS
+        post = Post.query.get(id)
+        if post is None:
+            return {'status':400, 'message':'Post does not exist'}, 400
+
+        # OBTAIN POST LIKES ARRAY AND CHECK IF USER'S ID IS IN THE ARRAY FOR LIKING OR REMOVING LIKE
+        postLikes = post.likes.copy()
+        if int(user.id) in postLikes:
+            postLikes.remove(user.id)
+            post.likes = postLikes
+            db.session.commit()
+            return {'status': 200, 'message': 'Removed like'}, 200
+        else:
+            postLikes.append(user.id)
+            post.likes = postLikes
+            db.session.commit()
+            return {'status': 200, 'message': 'Post liked'}, 200
+
+    except Exception as e:
+        print(e)
+        return {'status': 500, 'message': 'An error occurred'}, 500

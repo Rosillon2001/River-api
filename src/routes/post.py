@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from controllers.postController import getAllPosts, getUserPosts, createPost, deletePost, repost
+from controllers.postController import getAllPosts, getUserPosts, createPost, deletePost, repost, likePost
 
 post_bp = Blueprint('post_bp', __name__)
 
@@ -24,3 +24,8 @@ def posts():
 def repost_id(id):
     if(request.method == 'POST'):
         return repost(request, id)
+
+@post_bp.route("/like/<id>", methods=['POST'])
+def like_id(id):
+    if(request.method == 'POST'):
+        return likePost(request, id)

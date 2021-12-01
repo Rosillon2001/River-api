@@ -27,6 +27,7 @@ def getAllPosts():
         # COMBINE POSTS AND REPOSTS FOR SORTING BY DATE AND ID
         totalPosts = postList + repostList
         totalPosts.sort(key=itemgetter("dateCreated", "id"))
+        totalPosts.reverse()
 
         return {'status': 200, 'totalPosts': totalPosts}, 200
     except Exception as e:

@@ -33,7 +33,7 @@ def registerUser(request):
     except Exception as e:
         if('Key (username)' in e.args[0]):
             return {'status': 409, 'message': 'Username already registered'}, 409
-        elif('key (email)' in e.args[0]):
+        elif('Key (email)' in e.args[0]):
             return {'status': 409, 'message': 'email already registered'}, 409
         else:
             return {'status': 500, 'message': 'Could not process register'}, 500
@@ -121,7 +121,12 @@ def updateUser(request):
 
     except Exception as e:
         print(e)
-        return {'status':500, 'message':"Could not update user"}, 500
+        if('Key (username)' in e.args[0]):
+            return {'status': 409, 'message': 'Username already registered'}, 409
+        elif('Key (email)' in e.args[0]):
+            return {'status': 409, 'message': 'email already registered'}, 409
+        else:
+            return {'status':500, 'message':"Could not update user"}, 500
 
 
 @authTokenRequired

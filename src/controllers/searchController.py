@@ -1,10 +1,9 @@
 from sqlalchemy import or_
 from models.user import User
-from models.post import Post
+from models.post import Post, Repost
 
 def searchKeyword(keyword):
     try:
-
         # GATHER USERS
         users = User.query.filter(or_(User.username.ilike("%"+keyword+"%"), User.name.ilike("%"+keyword+"%"), User.bio.ilike("%"+keyword+"%"))).order_by(User.id.desc()).all()
         userList = []
@@ -16,7 +15,8 @@ def searchKeyword(keyword):
         posts = Post.query.filter(Post.text.ilike("%"+keyword+"%")).order_by(Post.id.desc()).all()
         postList = []
         for post in posts:
-            postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(post.reposts), 'type': 'post'}
+            reposters = [id[0] for id in post.reposts.with_entities(Repost.user_id).all()]
+            postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(reposters), 'reposters': reposters, 'type': 'post'}
             postList.append(postData)
 
         return {'status': 200, 'users': userList, 'posts': postList}, 200

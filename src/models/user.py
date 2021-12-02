@@ -15,8 +15,9 @@ class User(db.Model):
     birthDate = db.Column(db.String(10), nullable=True)
     picture = db.Column(db.String(255), nullable=True, default=None)
     dateCreated = db.Column(db.DateTime, default=datetime.utcnow()-timedelta(hours=4))
-    posts = db.relationship('Post', cascade="all, delete", backref="user")
-    reposts = db.relationship('Repost', cascade="all, delete", backref="user")
+    posts = db.relationship('Post', cascade="all, delete", backref="user", lazy='dynamic')
+    reposts = db.relationship('Repost', cascade="all, delete", backref="user", lazy='dynamic')
+    comments = db.relationship('Comment', cascade="all, delete", backref="user")
 
     # CONSTRUCTOR
     def __init__(self, username, email, password, name, bio, location, birthDate, picture):

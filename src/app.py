@@ -11,6 +11,7 @@ from config import *
 from routes.user import user_bp
 from routes.post import post_bp
 from routes.search import search_bp
+from routes.comment import comment_bp
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -20,6 +21,7 @@ db.init_app(app)
 app.register_blueprint(user_bp)
 app.register_blueprint(post_bp)
 app.register_blueprint(search_bp)
+app.register_blueprint(comment_bp)
 
 #Cloudinary config
 config(cloud_name = os.getenv('CLOUD_NAME'), api_key=os.getenv('CLOUDINARY_KEY'), 

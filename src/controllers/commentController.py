@@ -11,7 +11,7 @@ def getPostComments(id):
         # BUILD COMMENT LIST
         commentList = []
         for comment in comments:
-            commentData = {'id': comment.id, 'userID': comment.userID, 'postID': comment.postID, 'content': comment.content, 'dateCreated': comment.dateCreated}
+            commentData = {'id': comment.id, 'userID': comment.userID, 'postID': comment.postID, 'content': comment.content, 'dateCreated': comment.dateCreated, 'username':comment.user.username, 'picture':comment.user.picture}
             commentList.append(commentData)
 
         return {'status': 200, 'comments': commentList}, 200

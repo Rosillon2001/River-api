@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from controllers.userController import registerUser, loginUser, getUser, updateUser, deleteUser
+from controllers.userController import registerUser, loginUser, getUser, updateUser, deleteUser, getUserByID, followUser
 
 user_bp = Blueprint('user_bp', __name__)
 
@@ -23,3 +23,13 @@ def user():
         return updateUser(request)
     if(request.method == 'DELETE'):
         return deleteUser(request)
+
+@user_bp.route('/user/<id>', methods=['GET'])
+def userID(id):
+    if(request.method == 'GET'):
+        return getUserByID(id)
+
+@user_bp.route('/follow/<id>', methods=['POST'])
+def followID(id):
+    if(request.method == 'POST'):
+        return followUser(request, id)

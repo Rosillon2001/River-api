@@ -1,4 +1,3 @@
-from sqlalchemy.orm import backref
 from database import db
 from datetime import datetime, timedelta
 
@@ -18,6 +17,8 @@ class User(db.Model):
     posts = db.relationship('Post', cascade="all, delete", backref="user", lazy='dynamic')
     reposts = db.relationship('Repost', cascade="all, delete", backref="user", lazy='dynamic')
     comments = db.relationship('Comment', cascade="all, delete", backref="user")
+    followers = db.relationship('Follow', foreign_keys='Follow.followedID', cascade="all, delete", backref="followedUser")
+    follows = db.relationship('Follow', foreign_keys='Follow.followerID', cascade="all, delete", backref="followerUser")
 
     # CONSTRUCTOR
     def __init__(self, username, email, password, name, bio, location, birthDate, picture):

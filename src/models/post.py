@@ -1,6 +1,5 @@
 from database import db
-from datetime import datetime, timedelta
-
+from sqlalchemy.sql import func
 
 class Post(db.Model):
     __tablename__ = 'posts'
@@ -9,7 +8,7 @@ class Post(db.Model):
     likes = db.Column(db.ARRAY(db.Integer), default={})
     text = db.Column(db.String(200), nullable=False)
     images = db.Column(db.ARRAY(db.String(255)), nullable=True)
-    dateCreated = db.Column(db.DateTime, default=datetime.utcnow()-timedelta(hours=4))
+    dateCreated = db.Column(db.DateTime, default=func.now())
     reposts = db.relationship('Repost', cascade="all, delete", backref="post", lazy="dynamic")
     comments = db.relationship('Comment', cascade="all, delete", backref="post")
 
@@ -24,7 +23,7 @@ class Repost(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
-    dateCreated = db.Column(db.DateTime, default=datetime.utcnow()-timedelta(hours=4))
+    dateCreated = db.Column(db.DateTime, default=func.now())
 
     #CONSTRUCTOR
     def __init__(self, user_id, post_id):

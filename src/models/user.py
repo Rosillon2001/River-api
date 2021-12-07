@@ -1,5 +1,5 @@
 from database import db
-from datetime import datetime, timedelta
+from sqlalchemy.sql import func
 
 
 class User(db.Model):
@@ -13,7 +13,7 @@ class User(db.Model):
     location = db.Column(db.String(60), nullable=True)
     birthDate = db.Column(db.String(10), nullable=True)
     picture = db.Column(db.String(255), nullable=True, default=None)
-    dateCreated = db.Column(db.DateTime, default=datetime.utcnow()-timedelta(hours=4))
+    dateCreated = db.Column(db.DateTime, default=func.now())
     posts = db.relationship('Post', cascade="all, delete", backref="user", lazy='dynamic')
     reposts = db.relationship('Repost', cascade="all, delete", backref="user", lazy='dynamic')
     comments = db.relationship('Comment', cascade="all, delete", backref="user")

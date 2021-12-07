@@ -1,5 +1,5 @@
 from database import db
-from datetime import datetime, timedelta
+from sqlalchemy.sql import func
 
 class Comment(db.Model):
     __tablename__ = 'comments'
@@ -7,7 +7,7 @@ class Comment(db.Model):
     userID = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     postID = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=False)
     content = db.Column(db.String(140), nullable=False)
-    dateCreated = db.Column(db.DateTime, default=datetime.utcnow()-timedelta(hours=4))
+    dateCreated = db.Column(db.DateTime, default=func.now())
 
     #CONSTRUCTOR
     def __init__(self, userID, postID, content):

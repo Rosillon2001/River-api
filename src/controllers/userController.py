@@ -79,7 +79,7 @@ def getUser(request):
         for follower in user.followers:
             followers.append(follower.followerID)
 
-        return {'status': 200, 'id': user.id, 'username': user.username, 'email': user.email, 'name': user.name, 'bio': user.bio, 'location': user.location, 'birthDate': user.birthDate, 'picture': user.picture, 'dateCreated': user.dateCreated.strftime("%d/%m/%Y"), 'follows': follows, 'followers': followers}, 200
+        return {'status': 200, 'id': user.id, 'username': user.username, 'email': user.email, 'name': user.name, 'bio': user.bio, 'location': user.location, 'birthDate': user.birthDate, 'picture': user.picture, 'dateCreated': user.dateCreated.strftime("%d/%m/%Y"), 'follows': follows, 'followers': followers, 'postsNumber': len(user.posts.all()) + len(user.reposts.all())}, 200
     except Exception as e:
         print(e)
         return {'status': 500, 'message':'Could not get user data'}, 500
@@ -199,7 +199,7 @@ def getUserByID(id):
         totalPosts.sort(key=itemgetter("dateCreated"))
         totalPosts.reverse()
 
-        return {'status': 200, 'profile': {'id': requestedUser.id, 'username': requestedUser.username, 'email': requestedUser.email, 'name': requestedUser.name, 'bio': requestedUser.bio, 'location': requestedUser.location, 'birthDate': requestedUser.birthDate, 'picture': requestedUser.picture, 'dateCreated': requestedUser.dateCreated.strftime("%d/%m/%Y"), 'follows': follows, 'followers': followers}, 'posts': totalPosts }, 200
+        return {'status': 200, 'profile': {'id': requestedUser.id, 'username': requestedUser.username, 'email': requestedUser.email, 'name': requestedUser.name, 'bio': requestedUser.bio, 'location': requestedUser.location, 'birthDate': requestedUser.birthDate, 'picture': requestedUser.picture, 'dateCreated': requestedUser.dateCreated.strftime("%d/%m/%Y"), 'follows': follows, 'followers': followers, 'postsNumber': len(requestedUser.posts.all()) + len(requestedUser.reposts.all())}, 'posts': totalPosts }, 200
     except Exception as e:
         print(e)
         return {'status':500, 'message':"Could not get user"}, 500

@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from controllers.postController import getAllPosts, getUserPosts, createPost, deletePost, repost, likePost
+from controllers.postController import getAllPosts, getUserPosts, createPost, deletePost, repost, likePost, getFeedPosts
 
 post_bp = Blueprint('post_bp', __name__)
 
@@ -19,6 +19,11 @@ def post_id(id):
 def posts():
     if(request.method == 'GET'):
         return getAllPosts()
+
+@post_bp.route("/feed", methods=['GET'])
+def feed():
+    if(request.method == 'GET'):
+        return getFeedPosts(request)
 
 @post_bp.route("/repost/<id>", methods=['POST'])
 def repost_id(id):

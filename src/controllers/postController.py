@@ -37,6 +37,50 @@ def getAllPosts():
         return {'status': 500, 'message': 'Could not get posts'}, 500
 
 @authTokenRequired
+def getFeedPosts(request):
+    try:
+        token = request.headers['Authorization'].split(" ")[1]
+        userID = decodeToken(token).get('id')
+        user = User.query.get(userID)
+
+        totalPosts = []
+        # GET FOLLOWED USER POSTS AND REPOSTS
+        for follow in user.follows:
+            posts = follow.followedUser.posts.all()
+            reposts = follow.followedUser.reposts.all()
+            # POSTS
+            for post in posts:
+                reposters = [id[0] for id in post.reposts.with_entities(Repost.user_id).all()]
+                postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(reposters), 'reposters': reposters, 'type': 'post'}
+                totalPosts.append(postData)
+            # REPOSTS
+            for repost in reposts:
+                reposters = [id[0] for id in repost.post.reposts.with_entities(Repost.user_id).all()]
+                repostData = {'id': repost.post.id, 'userID': repost.post.user_id, 'username': repost.post.user.username, 'name': repost.post.user.name, 'picture': repost.post.user.picture, 'likes': repost.post.likes, 'text': repost.post.text, 'images': repost.post.images, 'dateCreated': repost.dateCreated, 'postDateCreated': repost.post.dateCreated, 'repostNumber': len(reposters), 'type':'repost', 'reposters': reposters, 'reposterID': repost.user.id, 'reposterUsername': repost.user.username}
+                totalPosts.append(repostData)
+        
+        # GET USER'S POSTS AND REPOSTS
+        # POSTS
+        for post in user.posts:
+            reposters = [id[0] for id in post.reposts.with_entities(Repost.user_id).all()]
+            postData = {'id': post.id, 'userID': post.user_id, 'username': post.user.username, 'name': post.user.name, 'picture': post.user.picture, 'likes': post.likes, 'text': post.text, 'images': post.images, 'dateCreated': post.dateCreated, 'repostNumber': len(reposters), 'reposters': reposters, 'type': 'post'}
+            totalPosts.append(postData)
+        # REPOSTS
+        for repost in user.reposts:
+            reposters = [id[0] for id in repost.post.reposts.with_entities(Repost.user_id).all()]
+            repostData = {'id': repost.post.id, 'userID': repost.post.user_id, 'username': repost.post.user.username, 'name': repost.post.user.name, 'picture': repost.post.user.picture, 'likes': repost.post.likes, 'text': repost.post.text, 'images': repost.post.images, 'dateCreated': repost.dateCreated, 'postDateCreated': repost.post.dateCreated, 'repostNumber': len(reposters), 'reposters': reposters, 'type':'repost', 'reposterID': repost.user.id, 'reposterUsername': repost.user.username}
+            totalPosts.append(repostData)
+
+        # SORT TOTAL POSTS BY DATE AND REVERSE THEM
+        totalPosts.sort(key=itemgetter("dateCreated"))
+        totalPosts.reverse()
+
+        return {'status': 200, 'totalPosts': totalPosts}, 200
+    except Exception as e:
+        print(e)
+        return {'status': 500, 'message': 'Could not get posts'}, 500
+
+@authTokenRequired
 def getUserPosts(request):
     try:
         token = request.headers['Authorization'].split(" ")[1]
